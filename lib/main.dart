@@ -3,7 +3,6 @@ import 'package:flutter_app/home_page.dart';
 //import 'package:flame/game.dart';
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_app/components/enemy.dart';
 
 
 void main() async => runApp(new MyApp());
