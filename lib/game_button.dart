@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class GameButton {
@@ -7,10 +6,14 @@ class GameButton {
   Color bg;
   bool enabled;
   bool tower;
+  int plot;
   bool aoe;
   int damage;
   int price;
+  String assetString;
 
   GameButton(
-      {this.id, this.text = "", this.bg = Colors.grey, this.enabled = true, this.tower = false, this.aoe = false});
+      {this.id, this.text = "", this.bg = Colors.lightGreen,
+        this.enabled = true,this.tower = false, this.plot = 0
+        , this.aoe = false});
 }
