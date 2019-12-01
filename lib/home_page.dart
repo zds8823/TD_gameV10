@@ -404,7 +404,8 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(1.0),
                     gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 8,
-
+                        childAspectRatio: screenWidth(context, 360)
+                            / screenHeight(context, 710),
                         crossAxisSpacing: 1.0,
                         mainAxisSpacing: 1.0),
                     itemCount: buttonsList.length,
@@ -430,49 +431,69 @@ class _HomePageState extends State<HomePage> {
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      new FlatButton(
-                        child: Image.asset(
-                          "assets/images/tower7.png",
-                          width: 30,
-                          fit: BoxFit.cover,
-                        ),
-                        color: Colors.red,
-                        padding: const EdgeInsets.all(20.0),
-                        onPressed: settower1,
-                      ),
                       new RaisedButton(
-                        child: Image.asset(
-                          "assets/images/tower4.png",
-                          width: 30,
-                          fit: BoxFit.cover,
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/tower7.png",
+                              width: 30,
+                              fit: BoxFit.cover,
+                            ),
+                            Text("Testing"),
+                          ],
                         ),
 
+                        color: Colors.redAccent,
+                        padding: const EdgeInsets.all(7.0),
+                        onPressed: settower1,
+
+                      ),
+
+                      new RaisedButton(
+                        child: Column(
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/images/tower4.png",
+                            width: 30,
+                            fit: BoxFit.cover,
+                          ),
+                          Text("AOE"),
+                        ],
+                      ),
                         color: Colors.green,
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(7.0),
                         onPressed: settower2,
                       ),
                       new RaisedButton(
-                        child: Image.asset(
-                          "assets/images/tower2.png",
-                          width: 30,
-                          fit: BoxFit.cover,
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/tower2.png",
+                              width: 30,
+                              fit: BoxFit.cover,
+                            ),
+                            Text("test"),
+                          ],
                         ),
-
                         color: Colors.yellow,
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(7.0),
                         onPressed: settower3,
                       ),
-                      new RaisedButton.icon(elevation: 1.0,
-                          icon: Image.asset('assets/images/tower6.png',
-                            width: 15,height: 15,),
+                      new RaisedButton(
+                        child: Column(
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/images/tower6.png",
+                              width: 30,
+                              fit: BoxFit.cover,
+                            ),
+                            Text("AOE"),
+                          ],
+                        ),
 
-                          color: Colors.blue,
-
-                          onPressed: settower4,
-
-                          label: Text("Add Team Image",style: TextStyle(
-                              color: Colors.white, fontSize: 16.0))
-
+                        color: Colors.blue,
+                        padding: const EdgeInsets.all(7.0),
+                        onPressed: settower3,
                       )
                     ],
                   ),
