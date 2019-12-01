@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/custom_dailog.dart';
@@ -20,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   var player1;
   var player2;
   var activePlayer;
-
   Timer _timer;
   int _countDown = 120;
   int _money = 80;
@@ -102,7 +102,8 @@ class _HomePageState extends State<HomePage> {
               if (currentEnemy == 10)
                 currentEnemy = 0;
 
-              enemyArray[currentEnemy].spawn(moveByX, moveByY, _enemyHealth);
+              if (_countDown >= 44)
+                enemyArray[currentEnemy].spawn(moveByX, moveByY, _enemyHealth);
             }
 
             // Movement for all spawned enemies
@@ -118,6 +119,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   void resetWave(double moveByX, double moveByY) {
     for (int i = 0; i < 10; i++)
       enemyArray[i].despawn(moveByY);
@@ -129,11 +131,36 @@ class _HomePageState extends State<HomePage> {
     _wave++;
   }
 
+  void setButtons(){
+    for (int j = 0; j < 96; j++) {
+
+      buttonsList[j].assetString = 'assets/images/plot.PNG';
+    }
+    buttonsList[10].bg = Colors.cyanAccent;
+    buttonsList[10].assetString = 'assets/images/tp.png';
+    buttonsList[86].bg = Colors.pink;
+    buttonsList[86].assetString = 'assets/images/castle.png';
+    buttonsList[10].enabled = false;
+    buttonsList[86].enabled = false;
+    buttonsList[10].plot = 5;
+    buttonsList[86].plot = 5;
+
+    for (int i = 0; i < 12; i++) {
+      buttonsList[_enemyPath[i]].enabled = false;
+      buttonsList[_enemyPath[i]].plot = 5;
+
+      buttonsList[_enemyPath[i]].bg = Colors.brown;
+      buttonsList[_enemyPath[i]].enabled = false;
+      buttonsList[_enemyPath[i]].assetString = 'assets/images/dirt.png';
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     buttonsList = doInit();
+    setButtons();
   }
 
   List<GameButton> doInit() {
@@ -144,47 +171,107 @@ class _HomePageState extends State<HomePage> {
     var gameButtons = <GameButton>[
       for (int i = 1; i <= 96; i++)
         new GameButton(id: i),
+
     ];
 
     return gameButtons;
   }
 
   void playGame(GameButton gb) {
-    setState(() {
 
-      if (tower >= 1) {
-        gb.text = towert;
-        if (tower == 1 && _money >= 10) {
+
+    setState(() {
+      buttonsList[gb.id].enabled = true;
+
+
+
+    if (gb.tower == true && _money >= 20){
+      showDialog(
+          context: context,builder: (_) => AssetGiffyDialog(
+        image: Image.asset(
+          'assets/images/up.gif',
+          fit: BoxFit.cover,
+        ),
+        title: Text('Would you like to upgrade?',
+          style: TextStyle(
+              fontSize: 22.0, fontWeight: FontWeight.w600),
+        ),
+        description: Text(
+          "Press Upgrade to improve tower damage or Cancel to exit window",
+          textAlign: TextAlign.center,
+          style: TextStyle(),
+        ),
+
+        buttonOkText: Text("Upgrade",
+          textAlign: TextAlign.center,
+          style: TextStyle(),
+        ),
+        onOkButtonPressed: () {
+          // upgrade stuff here
+          if (_money >= 20) {
+            gb.price = 20;
+            gb.damage = gb.damage + 10;
+            _money -= gb.price;
+          }
+          Navigator.of(context, rootNavigator: true).pop('dialog');
+        },
+      ) );
+
+    }
+
+      if (tower >= 1&& gb.plot <= 4) {
+
+
+        if (tower == 1 && _money >= 10 && gb.tower == false) {
           //change these colors to sprites
-          gb.bg = Colors.red;
+          gb.bg = Colors.brown;
           gb.tower = true;
           gb.damage = 5;
           gb.price = 10;
+          gb.plot = 1;
+          tower = 0;
+          gb.assetString = 'assets/images/towerplot7.png';
+          _money -= gb.price;
+
         }
-        if (tower == 2 && _money >= 25) {
-          gb.bg = Colors.green;
+        if (tower == 2 && _money >= 25 && gb.plot == 0) {
+          gb.bg = Colors.brown;
           gb.tower = true;
           gb.damage = 5;
           gb.aoe = true;
           gb.price = 25;
+          gb.plot = 2;
+          tower = 0;
+          gb.assetString = 'assets/images/towerplot4.png';
+          _money -= gb.price;
+
         }
-        if (tower == 3 && _money >= 30) {
-          gb.bg = Colors.yellow;
+        if (tower == 3 && _money >= 30 && gb.plot == 0) {
+          gb.bg = Colors.brown;
           gb.tower = true;
           gb.damage = 10;
           gb.price = 30;
+          gb.plot = 3;
+          tower = 0;
+          gb.assetString = 'assets/images/towerplot2.png';
+          _money -= gb.price;
+
         }
-        if (tower == 4 && _money >= 45) {
-          gb.bg = Colors.blue;
+        if (tower == 4 && _money >= 45 && gb.plot == 0) {
+          gb.bg = Colors.brown;
           gb.tower = true;
           gb.damage = 10;
           gb.aoe = true;
           gb.price = 45;
+          gb.plot = 4;
+          tower = 0;
+          gb.assetString = 'assets/images/towerplot6.png';
+          _money -= gb.price;
+
         }
 
-        if (gb.tower == true)
-          _money -= gb.price;
       }
+
 
       gb.enabled = false;
       int winner = checkWinner();
@@ -194,13 +281,16 @@ class _HomePageState extends State<HomePage> {
 
           showDialog(
               context: context,
-              builder: (_) => new CustomDialog("Game Tied",
-                  "Press the reset button to start again.", resetGame));
-        } else {
+              builder: (_) => new CustomDialog("Game lost",
+                  "Press the reset button to start again.", resetGame)
+          );
+        }
+        else {
           activePlayer == 2 ? autoPlay() : null;
         }
       }
     });
+
   }
 
   void autoPlay() {
@@ -220,37 +310,32 @@ class _HomePageState extends State<HomePage> {
 
   int checkWinner() {
     var winner = -1;
-    if (player1.contains(1) && player1.contains(2) && player1.contains(3)) {
+    if (_lives == 0) {
       winner = 1;
     }
 
-    if (winner == 1) {
+    if (_lives == 0) {
       showDialog(
           context: context,
-          builder: (_) => new CustomDialog("Player 1 Won",
+          builder: (_) => new CustomDialog("You Lost",
               "Press the reset button to start again.", resetGame));
     }
     return winner;
   }
 
 //Sets the squares to the tower type
-  String towert  = "";
   var tower = 0;
 
   void settower1(){
-    towert = "";
     tower = 1;
   }
   void settower2(){
-    towert = "";
     tower = 2;
   }
   void settower3(){
-    towert = "";
     tower = 3;
   }
   void settower4(){
-    towert = "";
     tower = 4;
   }
 
@@ -258,7 +343,9 @@ class _HomePageState extends State<HomePage> {
     if (Navigator.canPop(context)) Navigator.pop(context);
     setState(() {
       buttonsList = doInit();
-    });
+
+    }
+    );
   }
 
   @override
@@ -271,19 +358,19 @@ class _HomePageState extends State<HomePage> {
       start = false;
     }
 
-    for (int i = 0; i < 12; i++) {
-      //buttonsList[_enemyPath[i]].bg = Colors.brown;
-      buttonsList[_enemyPath[i]].enabled = false;
-      buttonsList[_enemyPath[i]].bg = Colors.white.withOpacity(0.0);
-    }
 
     return new Scaffold(
+       //backgroundColor: Colors.brown,
+
         appBar: new AppBar(
-          title: new Text("game test"),
+          title: new Text("Medieval TD"),
         ),
+
         body: new Stack(
+
           children: <Widget> [
             Column(
+
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -312,12 +399,12 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 new Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.all(2.0),
+
+                child: GridView.builder(
+                    padding: const EdgeInsets.all(1.0),
                     gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 8,
-                        childAspectRatio: screenWidth(context, 360)
-                            / screenHeight(context, 692),
+
                         crossAxisSpacing: 1.0,
                         mainAxisSpacing: 1.0),
                     itemCount: buttonsList.length,
@@ -325,20 +412,16 @@ class _HomePageState extends State<HomePage> {
                       width: 1.0,
                       height: 1.0,
                       child: new RaisedButton(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(0),
 
-                        onPressed: buttonsList[i].enabled
-                            ? () => playGame(buttonsList[i])
-                            : null,
+                        onPressed:() => playGame(buttonsList[i]),
 
                         child: Image.asset(
-                          "assets/images/plot.PNG",
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
+                          buttonsList[i].assetString,
                         ),
                         color: buttonsList[i].bg,
                         disabledColor: buttonsList[i].bg,
+
                       ),
                     ),
                   ),
@@ -347,20 +430,19 @@ class _HomePageState extends State<HomePage> {
                   child: new Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      new RaisedButton(
+                      new FlatButton(
                         child: Image.asset(
-                          "assets/images/tower1.png",
+                          "assets/images/tower7.png",
                           width: 30,
                           fit: BoxFit.cover,
                         ),
-
                         color: Colors.red,
                         padding: const EdgeInsets.all(20.0),
                         onPressed: settower1,
                       ),
                       new RaisedButton(
                         child: Image.asset(
-                          "assets/images/tower1.png",
+                          "assets/images/tower4.png",
                           width: 30,
                           fit: BoxFit.cover,
                         ),
@@ -371,7 +453,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       new RaisedButton(
                         child: Image.asset(
-                          "assets/images/tower1.png",
+                          "assets/images/tower2.png",
                           width: 30,
                           fit: BoxFit.cover,
                         ),
@@ -380,62 +462,94 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.all(20.0),
                         onPressed: settower3,
                       ),
-                      new RaisedButton(
-                        child: Image.asset(
-                          "assets/images/tower1.png",
-                          width: 30,
-                          fit: BoxFit.cover,
-                        ),
+                      new RaisedButton.icon(elevation: 1.0,
+                          icon: Image.asset('assets/images/tower6.png',
+                            width: 15,height: 15,),
 
-                        color: Colors.blue,
-                        padding: const EdgeInsets.all(20.0),
-                        onPressed: settower4,
+                          color: Colors.blue,
+
+                          onPressed: settower4,
+
+                          label: Text("Add Team Image",style: TextStyle(
+                              color: Colors.white, fontSize: 16.0))
+
                       )
                     ],
                   ),
                 ),
               ],
             ),
+
             // All enemies spawned and hidden at beginning, spawned when needed
-            Transform.translate(
-              offset: Offset(enemyArray[0].x, enemyArray[0].y),
-              child: enemyArray[0].build(),
+            Opacity(
+              opacity: enemyArray[0].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[0].x, enemyArray[0].y),
+                child: enemyArray[0].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[1].x, enemyArray[1].y),
-              child: enemyArray[1].build(),
+            Opacity(
+              opacity: enemyArray[1].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[1].x, enemyArray[1].y),
+                child: enemyArray[1].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[2].x, enemyArray[2].y),
-              child: enemyArray[2].build(),
+            Opacity(
+              opacity: enemyArray[2].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[2].x, enemyArray[2].y),
+                child: enemyArray[2].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[3].x, enemyArray[3].y),
-              child: enemyArray[3].build(),
+            Opacity(
+              opacity: enemyArray[3].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[3].x, enemyArray[3].y),
+                child: enemyArray[3].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[4].x, enemyArray[4].y),
-              child: enemyArray[4].build(),
+            Opacity(
+              opacity: enemyArray[4].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[4].x, enemyArray[4].y),
+                child: enemyArray[4].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[5].x, enemyArray[5].y),
-              child: enemyArray[5].build(),
+            Opacity(
+              opacity: enemyArray[5].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[5].x, enemyArray[5].y),
+                child: enemyArray[5].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[6].x, enemyArray[6].y),
-              child: enemyArray[6].build(),
+            Opacity(
+              opacity: enemyArray[6].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[6].x, enemyArray[6].y),
+                child: enemyArray[6].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[7].x, enemyArray[7].y),
-              child: enemyArray[7].build(),
+            Opacity(
+              opacity: enemyArray[7].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[7].x, enemyArray[7].y),
+                child: enemyArray[7].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[8].x, enemyArray[8].y),
-              child: enemyArray[8].build(),
+            Opacity(
+              opacity: enemyArray[8].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[8].x, enemyArray[8].y),
+                child: enemyArray[8].build(),
+              ),
             ),
-            Transform.translate(
-              offset: Offset(enemyArray[9].x, enemyArray[9].y),
-              child: enemyArray[9].build(),
+            Opacity(
+              opacity: enemyArray[9].opacity,
+              child: new Transform.translate(
+                offset: Offset(enemyArray[9].x, enemyArray[9].y),
+                child: enemyArray[9].build(),
+              ),
             ),
           ],
         ));
