@@ -3,20 +3,26 @@ import 'package:flutter_app/game_button.dart';
 
 class Enemy {
   int health = 200;
-  Color enemyColor = Colors.black.withOpacity(0.0);
+  double opacity = 0.0;
   double x = 125;
   double y = 70;
   bool spawned = false;
-  var _enemyPathX = [17, 21.5, 26, 27];
-  var _enemyPathY = [9.5, 14, 18.5, 23, 27.5, 32, 36.5, 41, 45.5];
+  var _enemyPathX = [15, 18.5, 23, 27];
+  var _enemyPathY = [5, 9, 14, 18, 22, 26, 30, 35, 39];
 
   Enemy();
   Widget build() {
     return new Container(
-      padding: const EdgeInsets.all(8.0),
-      width: 20,
-      height: 20,
-      color: enemyColor,
+      width: 50,
+      height: 50,
+      decoration: new BoxDecoration(
+        image: DecorationImage(
+          image: new AssetImage(
+              'assets/images/enemy.png'
+          ),
+          fit: BoxFit.fill,
+        ),
+      ),
     );
   }
 
@@ -39,7 +45,7 @@ class Enemy {
             health -= buttonsList[enemyPath[i] - 9].damage;
           if (buttonsList[enemyPath[i] + 7].aoe == true)
             health -= buttonsList[enemyPath[i] + 7].damage;
-          if (buttonsList[enemyPath[i] -7].aoe == true)
+          if (buttonsList[enemyPath[i] - 7].aoe == true)
             health -= buttonsList[enemyPath[i] - 7].damage;
           break;
         }
@@ -71,17 +77,17 @@ class Enemy {
   }
 
   void spawn(double width, double height, int enemyHealth){
-    enemyColor = Colors.black;
-    x = width * 12.5;
-    y = height * 7;
+    x = width * 12.3;
+    y = height * 6;
     spawned = true;
     health = enemyHealth;
+    opacity = 1.0;
   }
 
   // We don't actually destroy enemies, just hide and unhide when needed again
   void despawn(double height){
-    enemyColor = Colors.white.withOpacity(0.0);
     spawned = false;
     y = height * 7;
+    opacity = 0.0;
   }
 }
