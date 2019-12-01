@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   int _nextEnemyHealth = 300;
   int _enemyHealth = 150;
   bool start = true;
+  bool checkAlive = false;
 
   var enemyArray = [new Enemy(), new Enemy(), new Enemy(), new Enemy(),
     new Enemy(), new Enemy(), new Enemy(), new Enemy(), new Enemy(),
@@ -106,11 +107,20 @@ class _HomePageState extends State<HomePage> {
                 enemyArray[currentEnemy].spawn(moveByX, moveByY, _enemyHealth);
             }
 
+
             // Movement for all spawned enemies
             for (int i = 0; i < 10; i++) {
-              if (enemyArray[i].spawned == true)
+              if (enemyArray[i].spawned == true) {
                 enemyMovement(enemyArray[i], moveByX, moveByY);
+                checkAlive = true;
+              }
             }
+
+            // Will only reset if all enemies dead and timer is lower than 44
+            if (checkAlive == false && _countDown < 44)
+              resetWave(moveByX, moveByY);
+            else
+              checkAlive = false;
 
             _countDown = _countDown - 1;
           }
@@ -118,7 +128,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 
   void resetWave(double moveByX, double moveByY) {
     for (int i = 0; i < 10; i++)
@@ -129,6 +138,8 @@ class _HomePageState extends State<HomePage> {
     _countDown = 120;
     _money += 50;
     _wave++;
+    checkAlive = false;
+
   }
 
   void setButtons(){
@@ -439,12 +450,21 @@ class _HomePageState extends State<HomePage> {
                               width: 30,
                               fit: BoxFit.cover,
                             ),
-                            Text("Testing"),
+                            Text("Base",
+                              style: new TextStyle(
+                                fontSize: 5.0,
+                              ),
+                            ),
+                            Text("10"
+                            style: new TextStyle(
+                            fontSize: 5.0,
+                            ),
+                            ),
                           ],
                         ),
 
                         color: Colors.redAccent,
-                        padding: const EdgeInsets.all(7.0),
+                        padding: const EdgeInsets.all(5.0),
                         onPressed: settower1,
 
                       ),
@@ -457,11 +477,19 @@ class _HomePageState extends State<HomePage> {
                             width: 30,
                             fit: BoxFit.cover,
                           ),
-                          Text("AOE"),
+                          Text("AOE",
+                            style: new TextStyle(
+                              fontSize: 5.0,
+                            ),
+                          ),
+                          Text("25",                             
+                            style: new TextStyle(
+                          fontSize: 5.0,
+                         ),
                         ],
                       ),
                         color: Colors.green,
-                        padding: const EdgeInsets.all(7.0),
+                        padding: const EdgeInsets.all(5.0),
                         onPressed: settower2,
                       ),
                       new RaisedButton(
@@ -472,11 +500,20 @@ class _HomePageState extends State<HomePage> {
                               width: 30,
                               fit: BoxFit.cover,
                             ),
-                            Text("test"),
+                            Text("Base",
+                              style: new TextStyle(
+                                fontSize: 5.0,
+                              ),
+                            ),
+                              
+                              style: new TextStyle(
+                              fontSize: 5.0,
+                            ),
+                            ),
                           ],
                         ),
                         color: Colors.yellow,
-                        padding: const EdgeInsets.all(7.0),
+                        padding: const EdgeInsets.all(5.0),
                         onPressed: settower3,
                       ),
                       new RaisedButton(
@@ -487,12 +524,21 @@ class _HomePageState extends State<HomePage> {
                               width: 30,
                               fit: BoxFit.cover,
                             ),
-                            Text("AOE"),
+                            Text("AOE",
+                              style: new TextStyle(
+                              fontSize: 5.0,
+                            ),
+                            ),
+                            Text("45",
+                              style: new TextStyle(
+                              fontSize: 10.0,
+                              ),
+                            ),
                           ],
                         ),
 
                         color: Colors.blue,
-                        padding: const EdgeInsets.all(7.0),
+                        padding: const EdgeInsets.all(5.0),
                         onPressed: settower3,
                       )
                     ],
