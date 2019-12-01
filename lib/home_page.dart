@@ -450,16 +450,8 @@ class _HomePageState extends State<HomePage> {
                               width: 30,
                               fit: BoxFit.cover,
                             ),
-                            Text("Base",
-                              style: new TextStyle(
-                                fontSize: 5.0,
-                              ),
-                            ),
-                            Text("10"
-                            style: new TextStyle(
-                            fontSize: 5.0,
-                            ),
-                            ),
+                            Text("Base"),
+                            Text("10"),
                           ],
                         ),
 
@@ -477,15 +469,8 @@ class _HomePageState extends State<HomePage> {
                             width: 30,
                             fit: BoxFit.cover,
                           ),
-                          Text("AOE",
-                            style: new TextStyle(
-                              fontSize: 5.0,
-                            ),
-                          ),
-                          Text("25",                             
-                            style: new TextStyle(
-                          fontSize: 5.0,
-                         ),
+                          Text("AOE"),
+                          Text("25"),
                         ],
                       ),
                         color: Colors.green,
@@ -500,16 +485,8 @@ class _HomePageState extends State<HomePage> {
                               width: 30,
                               fit: BoxFit.cover,
                             ),
-                            Text("Base",
-                              style: new TextStyle(
-                                fontSize: 5.0,
-                              ),
-                            ),
-                              
-                              style: new TextStyle(
-                              fontSize: 5.0,
-                            ),
-                            ),
+                            Text("Base"),
+                            Text("30"),
                           ],
                         ),
                         color: Colors.yellow,
